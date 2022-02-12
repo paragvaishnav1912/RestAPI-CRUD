@@ -62,7 +62,7 @@ class employeeDao {
     async deleteOne(code:string){
         return this.Employee.updateMany(
             {code:code },
-            { $unset: { type: "" } }
+            { $unset: { code: "" } }
          )
     }
 }
