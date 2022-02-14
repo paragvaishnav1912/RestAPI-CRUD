@@ -19,26 +19,21 @@ class authCtrl {
     }
 
     async verifyingUser(req: Request, res: Response) {
-        // console.log('userin')
         const code = req.params.id;
         const flag = await employeeDao.getEmployeeByToken(code);
-        // console.log(flag);
         if (flag.length != 0) {
             const flagCheck = await employeeDao.updateEmployeeStatus(true, code)
             if (flagCheck.acknowledged) {
-                //console.log("in----");
                 res.status(httpStatus.OK)
                     .send(generateMessage.validation("you can now login", coverage.OK, httpStatus.OK));
-                    await employeeDao.deleteOne(code);
+                await employeeDao.deleteOne(code);
             }
             else {
-                //console.log("in else ------------");
                 res.status(httpStatus.NOT_FOUND)
                     .send(generateMessage.validation(coverage.NOT_EXISTS + coverage.EMPLOYEE, coverage.FAILED, httpStatus.NOT_FOUND));
             }
         }
         else {
-            //console.log("in else ------------");
             res.status(httpStatus.NOT_FOUND)
                 .send(generateMessage.validation('Your Email has not been verified. Please click on resend', coverage.FAILED, httpStatus.NOT_FOUND));
         }

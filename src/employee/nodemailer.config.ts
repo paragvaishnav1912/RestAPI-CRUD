@@ -14,7 +14,7 @@ class mailForConfirmation{
     });
 
     sendConfirmationEmail = (userName:string,emailId:string,emailToken:string)=>{
-        console.log('works');
+        // console.log('works');
         this.transport.sendMail({
             from:user,
             to:emailId,
