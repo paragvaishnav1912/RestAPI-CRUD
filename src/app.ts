@@ -18,9 +18,11 @@ logger.logger.info(
         .catch((e) => logger.logger.error(e))
 )
 
+app.use(express.static('public'));
 app.use(bodyparser.json());
 app.use(cors());
 app.use(helmet());
+app.set('view engine','ejs');
 
 app.use("/app", MainRoutes.app);
 
