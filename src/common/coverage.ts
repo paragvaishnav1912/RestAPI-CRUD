@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import companyDao from "../company/company.dao";
+
 import employeeDao from "../employee/employee.dao";
 import generateMessage from '../common/common.message';
 class message {
@@ -13,8 +14,11 @@ class message {
      FAILED = "Failure"
      MISS_FILED = "This Fields Are Essential "
      UPDATED = " Details Are Updated ";
+     LOGIN_FIRST = "You need to Login First"
      DELETED = "Details Deleted ";
-     NOT_EXISTS = "There is no such "
+     WRONG_PASS = "Wrong Password";
+     NOT_EXISTS = "There is no such ";
+     NO_EMAIL = "There is no such Email Id";
      AUTH_FAIL = "Authentication Failed"
      AUTH_SUCCESS = "Authentication Success"
      EMPTY = "There is no ";
@@ -24,8 +28,6 @@ class message {
 
      async userVerified(req: Request, res: Response, next: NextFunction) {
           const status = await employeeDao.getEmployeeByEmail(req.body.email);
-          // console.log(status);
-          // console.log(status.length);
           if (status.length > 0) {
                if (Object.values(status[0].toObject())[2]) {
                     next();

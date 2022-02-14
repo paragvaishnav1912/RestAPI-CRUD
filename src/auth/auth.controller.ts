@@ -12,10 +12,21 @@ class authCtrl {
 
 
     async logoutUser(req: Request, res: Response) {
-        req.headers['authorization'] = undefined;
-        res.status(httpStatus.OK)
-            .send(generateMessage.validation("logout  " + req.headers['authorization'], coverage.FAILED, httpStatus.ERROR));
 
+        try {
+
+            res.clearCookie("jwt");
+            const token = req.headers?.cookie?.substring(4);
+            const decoded = Jwt.verify(token + "", `${process.env.JWT_KEY}`);
+            res.status(httpStatus.OK)
+                .send(generateMessage.validation("your successfully logged out", coverage.AUTH_FAIL, httpStatus.OK));
+            //once user verified you can delete the token generated for email 
+        }
+        catch (e) {
+            return res.status(401).json({
+                message: 'something went wrong!!'
+            });
+        }
     }
 
     async verifyingUser(req: Request, res: Response) {
@@ -58,12 +69,12 @@ class authCtrl {
                             email: email,
                             password: password
                         },
-                            `${process.env.JWT_KEY}`,
-                            {
-                                expiresIn: "1hr"
-                            }
+                            `${process.env.JWT_KEY}`
                         );
-
+                        res.cookie('jwt', token, {
+                            httpOnly: true,
+                            maxAge: 5 * 60 * 1000
+                        })
                         return res.status(httpStatus.OK)
                             .send(generateMessage.validation(coverage.AUTH_SUCCESS, token, httpStatus.OK));
                     }

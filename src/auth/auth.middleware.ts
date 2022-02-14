@@ -1,17 +1,19 @@
 import  Jwt  from "jsonwebtoken";
 import {Request,Response, NextFunction } from 'express';
-
+import coverage from "../common/coverage";
+import { httpStatus } from "../common/coverage";
 class authMiddleware{
     async jwtTokenValidate(req:Request,res:Response,next:NextFunction){
         try{
-            const token = req.headers.authorization?.split(" ")[1];
+            const token = req.headers?.cookie?.substring(4);
             const decoded = Jwt.verify(token+"",`${process.env.JWT_KEY}`);
-            //once user verified you can delete the token generated for email 
             next();
         }
         catch(e){
             return res.status(401).json({
-                message: 'Auth failed'
+                message: coverage.LOGIN_FIRST,
+                status:"Authentication Failed",
+                statusCode:httpStatus.AUTH_FAIL
             });
         }
     }
