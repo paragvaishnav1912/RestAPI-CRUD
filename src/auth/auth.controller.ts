@@ -20,7 +20,6 @@ class authCtrl {
             const decoded = Jwt.verify(token + "", `${process.env.JWT_KEY}`);
             res.status(httpStatus.OK)
                 .send(generateMessage.validation("your successfully logged out", coverage.AUTH_FAIL, httpStatus.OK));
-            //once user verified you can delete the token generated for email 
         }
         catch (e) {
             return res.status(401).json({
